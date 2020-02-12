@@ -27,7 +27,7 @@ class Board extends React.Component {
         for (let i = 0; i < 9; i += 3) {
             const squares = [];
             for (let j = 0; j < 3; j++) {
-                squares.push(this.renderSquare(i + j)); 
+                squares.push(this.renderSquare(i + j));
             }
             rows.push(<div className="board-row" key={i.toString()}>{squares}</div>);
         }
@@ -48,13 +48,15 @@ class Game extends React.Component {
             history: [
                 {
                     squares: Array(9).fill(null),
+                    // 棋子坐标
+                    chessCoordinate: [0, 0],
                 },
             ],
             stepNumber: 0,
             xIsNext: true,
         };
     }
-    
+
     jumpTo(step) {
         this.setState({
             stepNumber: step,
@@ -73,11 +75,12 @@ class Game extends React.Component {
         this.setState({
             history: history.concat([{
                 squares,
+                chessCoordinate: getChessCoordinate(i),
             }]),
             stepNumber: history.length,
             xIsNext: !this.state.xIsNext,
         });
-    }
+    } 
 
     render() {
         const history = this.state.history;
@@ -85,7 +88,7 @@ class Game extends React.Component {
         const winner = calculateWinner(current.squares);
 
         const moves = history.map((step, move) => {
-            const desc = move ? 'Go to move #' + move : 'Go to game start';
+            const desc = move ? `Go to move ${getPlayer(move)}: [${step.chessCoordinate.join(', ')}]` : 'Go to game start';
             return (
                 <li key={move}>
                     <button onClick={() => this.jumpTo(move)}>{desc}</button>
@@ -123,13 +126,24 @@ function calculateWinner(squares) {
         [0, 4, 8],
         [2, 4, 6],
     ];
-    for (let i = 0; i < lines.length; i ++) {
+    for (let i = 0; i < lines.length; i++) {
         const [a, b, c] = lines[i];
         if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
             return squares[a];
         }
     }
     return null;
+}
+
+function getPlayer(len) {
+    return len % 2 !== 0 ? 'X' : 'O'
+}
+
+function getChessCoordinate(i) {
+    const col = i % 3;
+    const row = Math.floor(i / 3);
+    return [row + 1, col + 1];
+
 }
 
 // ========================================
