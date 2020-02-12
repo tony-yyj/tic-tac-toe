@@ -122,7 +122,11 @@ class Game extends React.Component {
             console.log('line', line);
 
         } else {
-            status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
+            if (current.squares.every(item => item !== null)) {
+                status = 'Game over, no winner~';
+            } else {
+                status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
+            }
         }
         return (
             <div className="game">
