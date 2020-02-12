@@ -49,4 +49,9 @@ body {
   .game-info {
     margin-left: 20px;
   }
+
+  .light{
+    color: yellow;
+    background-color: #333;
+  }
   
